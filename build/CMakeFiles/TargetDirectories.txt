@@ -1,0 +1,3 @@
+D:/JokelBaf/JokelBaf/Scripts/video-to-ascii/build/CMakeFiles/video_to_ascii.dir
+D:/JokelBaf/JokelBaf/Scripts/video-to-ascii/build/CMakeFiles/ALL_BUILD.dir
+D:/JokelBaf/JokelBaf/Scripts/video-to-ascii/build/CMakeFiles/ZERO_CHECK.dir
