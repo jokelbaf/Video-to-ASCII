@@ -1,5 +1,0 @@
-"C:\Program Files\JetBrains\CLion 2023.2.2\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=C:/dev/vcpkg/scripts/buildsystems/vcpkg.cmake -S D:\JokelBaf\JokelBaf\Scripts\video-to-ascii -B D:\JokelBaf\JokelBaf\Scripts\video-to-ascii\build
--- Selecting Windows SDK version 10.0.19041.0 to target Windows 10.0.22621.
--- Configuring done (0.0s)
--- Generating done (0.0s)
--- Build files have been written to: D:/JokelBaf/JokelBaf/Scripts/video-to-ascii/build
