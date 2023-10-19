@@ -7,7 +7,7 @@
 #include <chrono>
 #include <vector>
 
-#include "Structs.h"
+#include "src/structs.h"
 
 // Log levels
 #define LOG_VERBOSE 0

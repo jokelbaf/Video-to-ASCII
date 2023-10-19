@@ -5,10 +5,12 @@
 #include <csignal>
 #include <SFML/Audio.hpp>
 
-#include "colorUtil.hpp"
-#include "cmdutils.hpp"
+#include "src/utility/colors.h"
+#include "src/utility/cmd.h"
 
-#include "Structs.h"
+#include "src/modules/audiorw/audiorw.h"
+
+#include "structs.h"
 
 // Finding terminal size and other Windows specifics
 #if defined(_WIN64) || defined(_WIN32)
@@ -41,25 +43,6 @@ bool haltLoop = false;
 uint16_t scn_col = 80;
 uint16_t scn_row = 45;
 uint32_t skippedFrames = 0;
-
-
-void playAudio(const char* filename) {
-    sf::Music music;
-
-    if (!music.openFromFile(filename)) {
-        // Failed to load the file
-        std::cerr << "Error: Could not load audio file '" << filename << "'" << std::endl;
-        return;
-    }
-
-    // Play the loaded audio file
-    music.play();
-
-    // Wait until the music finishes playing
-    while (music.getStatus() == sf::SoundSource::Playing) {
-        Sleep(100);
-    }
-}
 
 
 // Renderer function, must be used in a separate thread
@@ -113,9 +96,8 @@ void cleanUp(int signum, bool clear = false)
     if (clear) clear(); // Clear terminal
 
     std::cout << "\u001b[0m"; // Reset color
-    if (skippedFrames != 0) writeMsg("Skipped " + std::to_string(skippedFrames) + " frame(s)", LOG_WARN);
-    writeMsg("Goodbye!", LOG_INFO);
 
+    if (skippedFrames != 0) writeMsg("Skipped " + std::to_string(skippedFrames) + " frame(s)", LOG_WARN);
     if (signum != 0) writeMsg("Terminating with exit code " + std::to_string(signum), LOG_ERROR);
 
     exit(signum);
@@ -128,19 +110,6 @@ void sigIntHandler(int signum)
     clear();
     writeMsg("Received signal " + std::to_string(signum) + ", halting", LOG_WARN);
     cleanUp(signum, true);
-}
-
-// Error handlers
-int handleCV2Error(
-    int status,
-    const char* func_name,
-    const char* err_msg,
-    const char* file_name,
-    int line,
-    void* userdata
-) {
-    //Do nothing -- will suppress console output
-    return 0; //Return value is not used
 }
 
 // Argument actions
@@ -187,7 +156,7 @@ int main(int argc, char** argv)
     }
 
     if (argc < 2) {
-        writeMsg("No video path provided. Run with the -h flag to view help", LOG_FATAL);
+        writeMsg("No video path or url provided. Run with the -h flag to view help", LOG_FATAL);
         cleanUp(-1);
     }
 
@@ -211,8 +180,7 @@ int main(int argc, char** argv)
     // Parent thread
     else if (pid > 0) {
 #endif
-    // Redirect CV2 errors
-    // redirectError(handleCV2Error);
+
     cv::VideoCapture capture(absPath);
 
     // Check if camera was opened successfully
@@ -231,12 +199,31 @@ int main(int argc, char** argv)
     writeMsg("Performing initial buffering, please wait a second...", LOG_INFO);
     sleep(1);
 
-    std::thread audioThread(playAudio, absPath); // Start audio thread
-    playAudio(absPath);
-    return 0;
+    double sample_rate;
+    std::vector<std::vector<double>> audio = audiorw::read(absPath, sample_rate);
+
+    // Convert audio data to Int16
+    std::vector<sf::Int16> int16Audio;
+    for (const auto& channel : audio) {
+        for (const auto& sample : channel) {
+            int16Audio.push_back(static_cast<sf::Int16>(sample * 32767.0)); // Scale to Int16 range
+        }
+    }
+
+    sf::SoundBuffer soundBuffer;
+    soundBuffer.loadFromSamples(
+        int16Audio.data(),
+        int16Audio.size(),
+        2,
+        static_cast<unsigned int>(sample_rate) / 2
+    );
+
+    sf::Sound sound;
+    sound.setBuffer(soundBuffer);
+    sound.play();
+
     unsigned int i = 0;
     const auto time1 = std::chrono::high_resolution_clock::now();
-    // chrono::duration<double, milli> syncTime = 0ms;
 
     // Hide cursor
 #if defined(_WIN64) || defined(_WIN32)
@@ -278,12 +265,14 @@ int main(int argc, char** argv)
             skippedFrames += skipFrames;
         }
     }
-    writeMsg("End of video, thanks for watching!", LOG_INFO);
 
     decodeThread.detach(); // If the thread is still running, detach it (at this point it should not be running)
     capture.release(); // Release the video capture object
 
     cleanUp(0, true);
+
+    writeMsg("End of video, thanks for watching!", LOG_INFO);
+
 #if !defined(_WIN64) && !defined(_WIN32)
     }
     // Child thread

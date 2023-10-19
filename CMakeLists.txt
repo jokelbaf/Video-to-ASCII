@@ -10,12 +10,17 @@ include_directories(.)
 include_directories(VideoToAscii)
 
 add_executable(video_to_ascii
-    cmdutils.cpp
-    cmdutils.hpp
-    colorUtil.cpp
-    colorUtil.hpp
-    main.cpp
-    Structs.h
+    src/utility/cmd.cpp
+    src/utility/cmd.h
+    src/utility/colors.cpp
+    src/utility/colors.h
+    src/structs.h
+    src/main.cpp
+
+    submodules/audiorw/
+        src/modules/audiorw/audiorw.h
+        src/modules/audiorw/read.cpp
+        src/modules/audiorw/write.cpp
 )
 
 target_link_libraries(video_to_ascii PRIVATE opencv_ml opencv_dnn opencv_core opencv_flann)

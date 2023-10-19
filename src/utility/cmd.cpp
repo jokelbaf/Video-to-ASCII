@@ -1,4 +1,4 @@
-#include "cmdutils.hpp"
+#include "cmd.h"
 
 void writeMsg(const std::string & msg, uint8_t level)
 {
