@@ -5,6 +5,7 @@
 #include <csignal>
 #include <SFML/Audio.hpp>
 
+#include "src/utility/youtube.h"
 #include "src/utility/colors.h"
 #include "src/utility/cmd.h"
 
@@ -160,7 +161,35 @@ int main(int argc, char** argv)
         cleanUp(-1);
     }
 
-    // Retrieve absolute path from user-entered relative path
+    // Hide cursor
+#if defined(_WIN64) || defined(_WIN32)
+    HANDLE hStdOut;
+    CONSOLE_CURSOR_INFO cursorInfo;
+
+    hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    GetConsoleCursorInfo(hStdOut, &cursorInfo);
+    cursorInfo.bVisible = FALSE;
+    SetConsoleCursorInfo(hStdOut, &cursorInfo);
+#else
+    system("tput civis");
+#endif
+
+    const std::string urls[3] = {
+        "https://youtube.com",
+        "https://youtu.be",
+        "https://www.youtube.com"
+    };
+
+    for (const auto& url : urls) {
+        if (strncmp(argv[1], url.c_str(), url.length()) == 0) {
+            auto videoUrl = getVideoDownloadUrl(argv[1]);
+            downloadVideo(videoUrl);
+
+            argv[argc - 1] = (char*)"video.mp4";
+        }
+    }
+
+    // Retrieve absolute path from relative path
     char pathBuff[PATH_MAX];
 #if defined(_WIN64) || defined(_WIN32)
     _fullpath(pathBuff, argv[argc - 1], PATH_MAX);
@@ -224,19 +253,6 @@ int main(int argc, char** argv)
 
     unsigned int i = 0;
     const auto time1 = std::chrono::high_resolution_clock::now();
-
-    // Hide cursor
-#if defined(_WIN64) || defined(_WIN32)
-    HANDLE hStdOut;
-    CONSOLE_CURSOR_INFO cursorInfo;
-
-    hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
-    GetConsoleCursorInfo(hStdOut, &cursorInfo);
-    cursorInfo.bVisible = FALSE;
-    SetConsoleCursorInfo(hStdOut, &cursorInfo);
-#else
-    system("tput civis");
-#endif
 
     clear(); // Clear terminal
 

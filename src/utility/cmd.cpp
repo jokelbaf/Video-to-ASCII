@@ -2,15 +2,14 @@
 
 void writeMsg(const std::string & msg, uint8_t level)
 {
-    const auto now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-    const auto date = ctime(&now);
-    date[strlen(date) - 1] = '\0'; // Strip newline from date
-    std::cout << "\u001b[0m" << date << " - ";
+    auto now = std::chrono::system_clock::now();
+    auto now_c = std::chrono::system_clock::to_time_t(now);
+
+    // Format time
+    std::tm tm_now = *std::localtime(&now_c);
+    std::cout << GREY_COL << std::put_time(&tm_now, "[%H:%M:%S %d/%m/%Y] ");
     
     switch (level) {
-        case LOG_VERBOSE:
-            std::cout << VERBOSE_COL << VERBOSE_STR;
-            break;
         case LOG_DEBUG:
             std::cout << DEBUG_COL << DEBUG_STR;
             break;
@@ -27,7 +26,7 @@ void writeMsg(const std::string & msg, uint8_t level)
             std::cout << FATAL_COL << FATAL_STR;
             break;
         default:
-            std::cout << INFO_COL << INFO_STR;
+            std::cout << "[" << INFO_COL << INFO_STR << GREY_COL << "]";
     }
 
     std::cout << "\u001b[0m" << ": " << msg << std::endl;
