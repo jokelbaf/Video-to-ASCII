@@ -11,7 +11,7 @@ std::string youtubeUrlToId(const std::string& url) {
     return "";
 }
 
-std::string getVideoDownloadUrl(const std::string& videoUrl)
+std::string getVideoDownloadUrl(const std::string & videoUrl)
 {
     try {
         std::string videoId = youtubeUrlToId(videoUrl);
@@ -67,9 +67,7 @@ bool downloadCallback(uint64_t current, uint64_t total) {
     // Print a simple progress bar
     std::cout << "\r[";
     for (int i = 0; i < 50; ++i) {
-        if (i < progress / 2) {
-            std::cout << "█";
-        } else if (i == progress / 2) {
+        if (i < progress / 2 || i == progress / 2) {
             std::cout << "█";
         } else {
             std::cout << "░";
@@ -81,25 +79,21 @@ bool downloadCallback(uint64_t current, uint64_t total) {
     return true;
 }
 
-void downloadVideo(std::string & url)
+bool downloadVideo(std::string & downloadUrl)
 {
     try {
         std::regex urlRegex("(https?://[^/]+)(/.*)");
 
         std::smatch match;
-        std::regex_match(url, match, urlRegex);
+        std::regex_match(downloadUrl, match, urlRegex);
 
         std::string baseUrl = match[1];
         std::string path = match[2];
-
-        writeMsg( "Downloading YouTube video...", LOG_INFO);
 
         std::cout << std::endl;
 
         httplib::Client client(baseUrl);
         auto response = client.Get(path, downloadCallback);
-
-        std::cout << std::endl << std::endl;
 
         if (response && response->status == 200) {
             // Open a file to write the video content
@@ -107,15 +101,46 @@ void downloadVideo(std::string & url)
 
             // Write the content to the file
             videoFile.write(response->body.c_str(), long(response->body.length()));
-
             videoFile.close();
-        } else {
-            writeMsg("Failed to download video. Please download it manually using the link: " + url, LOG_FATAL);
-            exit(1);
+
+            return true;
         }
+        return false;
+
     } catch (const std::exception& error) {
-        const std::string message = "Error while downloading the video: " + std::string(error.what());
-        writeMsg( message, LOG_FATAL);
+        return false;
+    }
+}
+
+void downloadYouTubeVideo(const std::string & videoUrl, int maxRetries)
+{
+    if (youtubeUrlToId(videoUrl).empty()) {
+        writeMsg("Invalid YouTube video URL (Unable to get videoId).", LOG_FATAL);
         exit(1);
     }
+
+    writeMsg( "Downloading YouTube video...", LOG_INFO);
+
+    int retries = 0;
+
+    while (retries < maxRetries) {
+        try {
+            std::cout << std::endl;
+
+            auto url = getVideoDownloadUrl(videoUrl);
+            if (downloadVideo(url)) {
+                std::cout << std::endl << std::endl;
+                return;
+            }
+
+            writeMsg("Failed to download the video. Retrying... ", LOG_ERROR);
+            retries++;
+
+        } catch (const std::exception& error) {
+            retries++;
+            writeMsg("Failed to download the video. Retrying... ", LOG_ERROR);
+        }
+    }
+    writeMsg("Unable to download YouTube video with the url provided.", LOG_FATAL);
+    exit(0);
 }

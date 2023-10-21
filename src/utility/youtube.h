@@ -6,8 +6,4 @@
 
 #include "cmd.h"
 
-std::string youtubeUrlToId(const std::string& url);
-
-std::string getVideoDownloadUrl(const std::string& videoUrl);
-
-void downloadVideo(std::string & url);
+void downloadYouTubeVideo(const std::string & videoUrl, int maxRetries = 3);

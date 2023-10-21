@@ -182,9 +182,7 @@ int main(int argc, char** argv)
 
     for (const auto& url : urls) {
         if (strncmp(argv[1], url.c_str(), url.length()) == 0) {
-            auto videoUrl = getVideoDownloadUrl(argv[1]);
-            downloadVideo(videoUrl);
-
+            downloadYouTubeVideo(argv[1]);
             argv[argc - 1] = (char*)"video.mp4";
         }
     }

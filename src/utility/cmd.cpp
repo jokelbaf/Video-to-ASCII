@@ -49,6 +49,7 @@ void writeBanner()
     puts("║  Plays a video from a file or YouTube url in your  ║");
     puts("║  terminal.                                         ║");
     puts("╚════════════════════════════════════════════════════╝");
+    puts("\n");
 }
 
 void writeHelp()
