@@ -39,3 +39,25 @@ During project development all dependencies were installed using [vcpgk](https:/
 - SFML / audio
 - HTTPLib
 - Nlohmann JSON
+
+## Usage
+
+1. Install dependencies;
+2. Link dependencies to project;
+3. Build project;
+4. Open console and navigate to the folder where your exe file is located;
+5. Run the file in your console with either **path to your video file** or **link to the YouTube video** as an argument.
+
+A few examples of how to run the program:
+
+```bash
+video_to_ascii.exe "C:\Users\user\Videos\video.mp4"
+```
+
+```bash
+video_to_ascii.exe "https://youtu.be/mgh07DuvAWM?si=dK12xaNkWardKpGW"
+```
+
+## Contributing
+
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
