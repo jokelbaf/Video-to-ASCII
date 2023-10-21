@@ -27,7 +27,7 @@ Operating system compatibility:
 
 [Click to View YouTube video](https://www.youtube.com/watch?v=lRmQkoRsXAo)
 
-[<img src="https://i.ytimg.com/vi/lRmQkoRsXAo/maxresdefault.jpg" width="50%">](https://www.youtube.com/watch?v=lRmQkoRsXAo "Play ANY YouTube Video in a Terminal Window")
+[<img src="https://i.ytimg.com/vi/lRmQkoRsXAo/maxresdefault.jpg" width="65%">](https://www.youtube.com/watch?v=lRmQkoRsXAo "Play ANY YouTube Video in a Terminal Window")
 
 
 ## Dependencies
@@ -42,6 +42,7 @@ During project development all dependencies were installed using [vcpgk](https:/
 
 ## Usage
 
+### Building manually
 1. Install dependencies;
 2. Link dependencies to project;
 3. Build project;
@@ -58,6 +59,12 @@ video_to_ascii.exe "C:\Users\user\Videos\video.mp4"
 video_to_ascii.exe "https://youtu.be/mgh07DuvAWM?si=dK12xaNkWardKpGW"
 ```
 
+### Downloading pre-built executable
+
+1. Download the latest release from [here](https://github.com/JokelBaf/Video-to-ASCII/releases/latest) (currently only Windows executables are available);
+2. Open console and navigate to the folder where your exe file is located;
+3. Run the file in your console with either **path to your video file** or **link to the YouTube video** as an argument.
+
 ## Contributing
 
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change. Note that all libraries **must** be linked statically, to build a single exe file.

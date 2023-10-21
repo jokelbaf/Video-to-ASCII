@@ -1,5 +1,5 @@
-#ifndef cmdutils_hpp
-#define cmdutils_hpp
+#ifndef CMD_H
+#define CMD_H
 
 #include <iostream>
 #include <cstdio>
@@ -32,7 +32,7 @@
 #define FATAL_COL   "\u001b[31;1m" // Red
 
 // Version strings
-#define VERSION_STR "0.5.0"
+#define VERSION_STR "1.0.0"
 
 // Functions
 void writeMsg(const std::string & msg, uint8_t level);

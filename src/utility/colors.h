@@ -1,5 +1,5 @@
-#ifndef colorUtil_hpp
-#define colorUtil_hpp
+#ifndef COLORS_H
+#define COLORS_H
 
 #include <iostream>
 #include <climits>

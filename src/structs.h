@@ -1,5 +1,5 @@
-#ifndef Structs_h
-#define Structs_h
+#ifndef STRUCTS_H
+#define STRUCTS_H
 
 #include <string>
 
