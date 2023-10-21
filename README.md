@@ -25,10 +25,10 @@ Operating system compatibility:
 
 ## Preview
 
-<details open>
-  <summary>YouTube Video</summary>
-  [![Now in Android: 55](https://i.ytimg.com/vi/Hc79sDi3f0U/maxresdefault.jpg)](https://www.youtube.com/watch?v=Hc79sDi3f0U "Now in Android: 55")
-</details>
+[Click to View YouTube video](https://www.youtube.com/watch?v=lRmQkoRsXAo)
+
+[<img src="https://i.ytimg.com/vi/lRmQkoRsXAo/maxresdefault.jpg" width="50%">](https://www.youtube.com/watch?v=lRmQkoRsXAo "Play ANY YouTube Video in a Terminal Window")
+
 
 ## Dependencies
 
